@@ -23,7 +23,7 @@
 
 - 📝 使用 DeepSeek AI 生成语义化提交消息
 
-- 🎨 支持多种提交消息格式 (Conventional, Bracketed 等)
+- 🎨 支持多种提交消息格式（Conventional, Bracketed 等）
 
 - ⚙️ 可配置的 AI 模型参数
 
@@ -64,7 +64,7 @@ nix build .#git-commit-generator
 
 ## ⚙️ 配置 DeepSeek API 密钥
 
-创建一个 .env 文件在项目目录中:
+创建一个 `.env` 文件在项目目录中：
 ```
 DEEPSEEK_API_KEY=your_api_key_here
 ```
@@ -121,7 +121,7 @@ graph TD
 
 ## 🙏 致谢
 
-感谢 DeepSeek AI 提供强大的 AI 模型支持以及 Rust 社区提供优秀的开发工具和库!!
+感谢 DeepSeek AI 提供强大的 AI 模型支持以及 Rust 社区提供优秀的开发工具和库！
 
 ## 🤝 贡献
-欢迎提交 [Issues](https://github.com/Emin017/git-commit-generator/issues) 和 [Pull Requests](https://github.com/Emin017/git-commit-generator/pulls)!
+欢迎提交 [Issues](https://github.com/Emin017/git-commit-generator/issues) 和 [Pull Requests](https://github.com/Emin017/git-commit-generator/pulls)！
