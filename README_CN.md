@@ -57,10 +57,8 @@ git-commit-generator --help
 #### 使用 Nix
 
 ```shell
-# 使用 Nix 构建
-nix build .#git-commit-generator
-# 运行二进制文件
-./result/bin/git-commit-generator --help
+# 使用 Nix
+nix run github:Emin017/git-commit-generator#git-commit-generator
 ```
 
 ## ⚙️ 配置 DeepSeek API 密钥

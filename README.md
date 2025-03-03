@@ -58,10 +58,7 @@ git-commit-generator --help
 #### Using Nix
 
 ```shell
-# Build using Nix
-nix build .#git-commit-generator
-# Run the binary
-./result/bin/git-commit-generator --help
+nix run github:Emin017/git-commit-generator#git-commit-generator
 ```
 
 ## ⚙️ Configure DeepSeek API Key
