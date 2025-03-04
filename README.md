@@ -121,6 +121,7 @@ graph TD
 
 ## 🛡️ License
 
+This project is licensed under the Mulan PSL v2. You can find the full license text [here](LICENSE).
 
 ## 🙏 Acknowledgments
 

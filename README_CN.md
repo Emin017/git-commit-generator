@@ -121,6 +121,7 @@ graph TD
 
 ## 🛡️ 许可证
 
+本项目采用 MulanPSL-2.0 许可证。查看 [LICENSE](LICENSE) 文件获取更多信息
 
 ## 🙏 致谢
 
