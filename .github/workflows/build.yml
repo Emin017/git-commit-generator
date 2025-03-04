@@ -16,3 +16,8 @@ jobs:
         run: nix flake check --all-systems
       - name: Build Git Commit Generator
         run: nix build '.#git-commit-generator'
+      - name: Upload Git Commit Generator
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: git-commit-generator
+          path: result/bin/git-commit-generator
