@@ -1,0 +1,54 @@
+name: Update flake lock
+on:
+  schedule:
+    # Trigger every Monday and Thursday at 8:00 UTC
+    - cron: '0 8 * * 1,4,6'
+  workflow_dispatch: # Allow manual triggering
+jobs:
+  update-flake-lock:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Update flake lock
+        run: |
+          nix flake update
+      - name: Build Git Commit Generator
+        run: |
+          nix build '.#git-commit-generator'
+      - name: Create Pull Request
+        run: |
+          echo "Creating a new pull request..."
+          UPDATE_DATE=$(date +%Y-%m-%d)
+          BRANCH_NAME="update-flake-lock"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions[bot]"
+          git fetch origin
+          # Create a new branch
+          echo "Creating a new branch..."
+          git checkout -b $BRANCH_NAME
+          git add flake.lock
+          if ! git diff --quiet --cached --exit-code; then
+              updatedFiles=$(git diff --cached --name-only)
+              echo "Have changes: $updatedFiles"
+              git commit -m "chore: update flake lock to $UPDATE_DATE"
+              # Push the changes
+              echo "Pushing changes..."
+              git push origin "$BRANCH_NAME" --force-with-lease
+              # Create a new PR
+              echo "Creating a new PR..."
+              gh pr create \
+                --reviewer Emin017 \
+                --title "chore: update flake lock $UPDATE_DATE" \
+                --body "Auto-generated PR to merge '$BRANCH_NAME' into 'main', changes:$updatedFiles" \
+                --base main \
+                --head "$BRANCH_NAME" \
+                --repo "${{ github.repository }}"
+              echo "PR created!"
+            fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
