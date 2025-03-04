@@ -7,9 +7,13 @@
 <img alt="AI" src="https://img.shields.io/badge/AI-powered-%23FF6F61.svg?style=for-the-badge">
 
 ![GitHub](https://img.shields.io/github/license/Emin017/git-commit-generator)
+![GitHub workflows](https://img.shields.io/github/actions/workflow/status/Emin017/git-commit-generator/build.yml)
 ![GitHub issues](https://img.shields.io/github/issues/Emin017/git-commit-generator)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Emin017/git-commit-generator)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Emin017/git-commit-generator)
+
+![GitHub stars](https://img.shields.io/github/stars/Emin017/git-commit-generator?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Emin017/git-commit-generator?style=social)
 
 [![English](https://img.shields.io/badge/English-README-2ea44f?style=for-the-badge)](README.md)
 [![中文](https://img.shields.io/badge/中文-介绍-FF6F61?style=for-the-badge)](README_CN.md)
