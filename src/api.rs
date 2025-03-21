@@ -24,11 +24,15 @@ struct ChatCompletionRequest {
 }
 
 /// Generate a commit message using the DeepSeek API
-pub async fn generate_commit_message(config: &Config, diff: &str) -> Result<String> {
+pub async fn generate_commit_message(
+    config: &Config,
+    diff: &str,
+    history_title: Option<Vec<String>>,
+) -> Result<String> {
     let client = reqwest::Client::new();
 
     // Request body
-    let request = build_request(config, diff);
+    let request = build_request(config, diff, history_title);
     let response = send_api_request(&client, &request, &config.api_key).await?;
 
     println!("");
@@ -44,13 +48,31 @@ pub async fn generate_commit_message(config: &Config, diff: &str) -> Result<Stri
 }
 
 /// Build the request body for the API
-fn build_request(config: &Config, diff: &str) -> ChatCompletionRequest {
+fn build_request(
+    config: &Config,
+    diff: &str,
+    history_title: Option<Vec<String>>,
+) -> ChatCompletionRequest {
     // Prompt
     let format_instruction = config.format.get_prompt();
-    let prompt = format!(
+    let mut prompt = format!(
         "Please write a commit message for the following changes:\n\n{}\n\n{}",
         format_instruction, diff
     );
+
+    match history_title {
+        Some(titles) if !titles.is_empty() => {
+            prompt.push_str(
+                "\n\nFor reference, here are some recent commit titles in this repository:\n",
+            );
+            for (i, title) in titles.iter().enumerate() {
+                prompt.push_str(&format!("{}. {}\n", i + 1, title));
+            }
+        }
+        _ => {
+            prompt.push_str("\n\nNo recent commit titles available for reference!");
+        }
+    }
 
     // Request body
     ChatCompletionRequest {
