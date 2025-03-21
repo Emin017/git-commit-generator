@@ -17,6 +17,10 @@ struct Args {
     /// Deepseek model to use
     #[arg(short, long, default_value = "deepseek-chat")]
     model: String,
+
+    /// Show recent commit titles (0 = don't show)
+    #[arg(short, long, default_value_t = 0)]
+    git_history: usize,
 }
 
 #[tokio::main]
@@ -46,7 +50,30 @@ async fn main() -> Result<()> {
         );
     }
 
-    let _ = api::generate_commit_message(&config, &diff)
+    let history_titles = if args.git_history > 0 {
+        match git::get_recent_commit_titles(args.git_history) {
+            Ok(titles) => {
+                println!(
+                    "{} {}",
+                    "📜".cyan(),
+                    format!("Reference {} recent commit titles", args.git_history).cyan()
+                );
+                Some(titles)
+            }
+            Err(e) => {
+                println!(
+                    "{} {}",
+                    "⚠️".yellow(),
+                    format!("Failed to get commit history: {}", e).yellow()
+                );
+                None
+            }
+        }
+    } else {
+        None
+    };
+
+    let _ = api::generate_commit_message(&config, &diff, history_titles)
         .await
         .context("Failed to generate commit message")?;
 
