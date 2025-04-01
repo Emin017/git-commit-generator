@@ -1,0 +1,96 @@
+name: Release Git Commit Generator
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Version tag (e.g., v0.1.0)'
+        required: true
+        default: 'v0.1.0'
+jobs:
+  build-and-release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            asset_name: git-commit-generator-linux
+            asset_content_type: application/octet-stream
+          - os: macos-latest
+            asset_name: git-commit-generator-macos
+            asset_content_type: application/octet-stream
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Git
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git tag ${{ github.event.inputs.tag }} || echo "Tag already exists"
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          fi
+          echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Setup Nix
+        uses: DeterminateSystems/nix-installer-action@main
+      - name: Setup project
+        run: |
+          nix build -L
+          cp result/bin/git-commit-generator ${{ matrix.asset_name }}
+      - name: Calculate checksums
+        id: checksums
+        run: |
+          echo "SHA256=$(sha256sum ${{ matrix.asset_name }} | awk '{print $1}')" >> $GITHUB_ENV
+          echo "MD5=$(md5sum ${{ matrix.asset_name }} | awk '{print $1}')" >> $GITHUB_ENV
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Git Commit Generator ${{ env.VERSION }}
+          tag_name: ${{ env.VERSION }}
+          draft: false
+          prerelease: false
+          body: |
+            # Git Commit Generator ${{ env.VERSION }}
+
+            Release date: ${{ env.RELEASE_DATE }}
+
+            ## 📦 Support Platforms
+            - Linux (x86_64)
+            - macOS (x86_64, arm64)
+
+            ## 🔑 Features
+            - Automatically analyze staged Git changes
+            - Generate semantic commit messages using DeepSeek AI
+            - Simple and easy-to-use command line interface
+
+            ## 🔢 Checksums (${{ matrix.asset_name }})
+            - SHA256: ${{ env.SHA256 }}
+            - MD5: ${{ env.MD5 }}
+
+            ## 📝 Installation
+
+            ### Download
+            ```bash
+            chmod +x git-commit-generator-*
+            sudo mv git-commit-generator-* /usr/local/bin/git-commit-generator
+            ```
+
+            ### Use Nix
+            ```bash
+            nix run github:Emin017/git-commit-generator
+            ```
+          files: |
+            ${{ matrix.asset_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
