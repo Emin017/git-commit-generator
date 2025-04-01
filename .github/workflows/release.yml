@@ -17,10 +17,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            asset_name: git-commit-generator-linux
+            asset_name: git-commit-generator-x86_64-linux
             asset_content_type: application/octet-stream
           - os: macos-latest
-            asset_name: git-commit-generator-macos
+            asset_name: git-commit-generator-aarch64-macos
             asset_content_type: application/octet-stream
     permissions:
       contents: write
@@ -74,16 +74,12 @@ jobs:
             - Generate semantic commit messages using DeepSeek AI
             - Simple and easy-to-use command line interface
 
-            ## 🔢 Checksums (${{ matrix.asset_name }})
-            - SHA256: ${{ env.SHA256 }}
-            - MD5: ${{ env.MD5 }}
-
             ## 📝 Installation
 
             ### Download
             ```bash
-            chmod +x git-commit-generator-*
-            sudo mv git-commit-generator-* /usr/local/bin/git-commit-generator
+            chmod +x git-commit-generator
+            sudo mv git-commit-generator /usr/local/bin/git-commit-generator
             ```
 
             ### Use Nix
