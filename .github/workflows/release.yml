@@ -54,7 +54,7 @@ jobs:
           echo "SHA256=$(sha256sum ${{ matrix.asset_name }} | awk '{print $1}')" >> $GITHUB_ENV
           echo "MD5=$(md5sum ${{ matrix.asset_name }} | awk '{print $1}')" >> $GITHUB_ENV
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           name: Git Commit Generator ${{ env.VERSION }}
           tag_name: ${{ env.VERSION }}
