@@ -1,8 +1,8 @@
 name: Update flake lock
 on:
   schedule:
-    # Trigger every Monday and Thursday at 8:00 UTC
-    - cron: '0 8 * * 1,4,6'
+    # Trigger every 1st and 15th of the month at 08:00 UTC
+    - cron: '0 8 1-7,15-21 * 1'
   workflow_dispatch: # Allow manual triggering
 jobs:
   update-flake-lock:
