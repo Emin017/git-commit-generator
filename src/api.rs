@@ -88,7 +88,7 @@ fn build_request(
             },
         ],
         stream: true,
-        temperature: 0.5,
+        temperature: 0.3,
     }
 }
 
