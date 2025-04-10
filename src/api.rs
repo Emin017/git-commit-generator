@@ -56,7 +56,8 @@ fn build_request(
     // Prompt
     let format_instruction = config.format.get_prompt();
     let mut prompt = format!(
-        "Please write a commit message for the following changes:\n\n{}\n\n{}",
+        "Please ensure that the commit message is relevant to the changes made in the diff, \
+        please write a commit message for the following changes:\n\n{}\n\n{}",
         format_instruction, diff
     );
 
@@ -80,7 +81,18 @@ fn build_request(
         messages: vec![
             Message {
                 role: "system".to_string(),
-                content: "You are a Git commit message assistant. Your task is to generate concise and clear commit messages based on the provided Git diff.".to_string(),
+                content: [
+                    "You are a Git commit message assistant. ",
+                    "Your task is to generate concise and clear commit messages based on the provided Git diff, ",
+                    "please put the generated content in a code block for easy copying. ",
+                    "please follow the format of the commit message: ",
+                    "{component}: {description} ",
+                    "* {first long description} ",
+                    "* {second long description} ",
+                    "* {maybe more long description} ",
+                    "You can also add some additional description if necessary, ",
+                    "but do not add any additional content outside the code block. ",
+                ].join("").to_string(),
             },
             Message {
                 role: "user".to_string(),
