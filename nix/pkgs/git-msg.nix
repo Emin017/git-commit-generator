@@ -10,7 +10,7 @@ let
 in
 pkgs.pkgsStatic.rustPlatform.buildRustPackage {
   pname = "git-msg";
-  version = "0.1.0";
+  version = "0.2.0";
 
   cargoLock = {
     lockFile = ./../../Cargo.lock;
