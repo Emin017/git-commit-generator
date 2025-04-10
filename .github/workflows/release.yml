@@ -17,10 +17,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         include:
           - os: ubuntu-latest
-            asset_name: git-commit-generator-x86_64-linux
+            asset_name: git-msg-x86_64-linux
             asset_content_type: application/octet-stream
           - os: macos-latest
-            asset_name: git-commit-generator-aarch64-macos
+            asset_name: git-msg-aarch64-macos
             asset_content_type: application/octet-stream
     permissions:
       contents: write
@@ -47,7 +47,7 @@ jobs:
       - name: Setup project
         run: |
           nix build -L
-          cp result/bin/git-commit-generator ${{ matrix.asset_name }}
+          cp result/bin/git-msg ${{ matrix.asset_name }}
       - name: Calculate checksums
         id: checksums
         run: |
@@ -61,7 +61,7 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            # Git Commit Generator ${{ env.VERSION }}
+            # Git Commit Generator (git-msg) ${{ env.VERSION }}
 
             Release date: ${{ env.RELEASE_DATE }}
 
@@ -78,13 +78,13 @@ jobs:
 
             ### Download
             ```bash
-            chmod +x git-commit-generator
-            sudo mv git-commit-generator /usr/local/bin/git-commit-generator
+            chmod +x git-msg
+            sudo mv git-msg /usr/local/bin/git-msg
             ```
 
             ### Use Nix
             ```bash
-            nix run github:Emin017/git-commit-generator
+            nix run github:Emin017/git-commit-generator#git-msg
             ```
           files: |
             ${{ matrix.asset_name }}

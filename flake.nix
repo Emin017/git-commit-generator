@@ -41,11 +41,11 @@
         in
         {
           packages = {
-            git-commit-generator = pkgs.callPackage ./nix/pkgs/git-commit-generator.nix { };
-            default = self.packages.${system}.git-commit-generator;
+            git-msg = pkgs.callPackage ./nix/pkgs/git-msg.nix { };
+            default = self.packages.${system}.git-msg;
           };
           devShells.default = pkgs.mkShell {
-            inputsFrom = [ self.packages.${system}.git-commit-generator ];
+            inputsFrom = [ self.packages.${system}.git-msg ];
             buildInputs = with pkgs; [
               rust-analyzer
               rustfmt

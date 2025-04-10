@@ -9,8 +9,8 @@ let
   libiconvLib = pkgs.pkgsStatic.libiconv.dev;
 in
 pkgs.pkgsStatic.rustPlatform.buildRustPackage {
-  pname = "git-commit-generator";
-  version = "0.1.0.0";
+  pname = "git-msg";
+  version = "0.1.0";
 
   cargoLock = {
     lockFile = ./../../Cargo.lock;

@@ -19,7 +19,7 @@ jobs:
           nix flake update
       - name: Build Git Commit Generator
         run: |
-          nix build '.#git-commit-generator'
+          nix build -L
       - name: Create Pull Request
         run: |
           echo "Creating a new pull request..."

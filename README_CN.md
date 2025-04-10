@@ -1,4 +1,4 @@
-# 🚀 Git Commit Generator
+# 🚀 Git Commit Generator (git-msg)
 
 <div align="center">
 <img alt="DeepSeek AI" src="https://img.shields.io/badge/DeepSeek-AI-%23FF6F61.svg?style=for-the-badge">
@@ -55,14 +55,14 @@ cd git-commit-generator
 cargo build --release
 cargo install --path .
 # 运行二进制文件
-git-commit-generator --help
+git-msg --help
 ```
 
 #### 使用 Nix
 
 ```shell
 # 使用 Nix
-nix run github:Emin017/git-commit-generator#git-commit-generator
+nix run github:Emin017/git-commit-generator#git-msg
 ```
 
 ## ⚙️ 配置 DeepSeek API 密钥
@@ -79,13 +79,13 @@ DEEPSEEK_API_KEY=your_api_key_here
 git add .
 
 # 生成提交信息
-git-commit-generator
+git-msg
 
 # 使用不同的提交格式
-git-commit-generator --format conventional
+git-msg --format conventional
 
 # 使用不同的模型
-git-commit-generator --model deepseek-coder
+git-msg --model deepseek-reasoner
 ```
 
 ### 💡 可用选项
