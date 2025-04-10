@@ -1,4 +1,4 @@
-# 🚀 Git Commit Generator
+# 🚀 Git Commit Generator (git-msg)
 
 <div align="center">
 <img alt="DeepSeek AI" src="https://img.shields.io/badge/DeepSeek-AI-%23FF6F61.svg?style=for-the-badge">
@@ -56,13 +56,13 @@ cargo build --release
 # Install the binary
 cargo install --path .
 # Run the binary
-git-commit-generator --help
+git-msg --help
 ```
 
 #### Using Nix
 
 ```shell
-nix run github:Emin017/git-commit-generator#git-commit-generator
+nix run github:Emin017/git-commit-generator#git-msg
 ```
 
 ## ⚙️ Configure DeepSeek API Key
@@ -79,13 +79,13 @@ DEEPSEEK_API_KEY=your_api_key_here
 git add .
 
 # Generate commit message
-git-commit-generator
+git-msg
 
 # Use different commit format
-git-commit-generator --format conventional
+git-msg --format conventional
 
 # Use different model
-git-commit-generator --model deepseek-coder
+git-msg --model deepseek-coder
 ```
 
 ### 💡 Available Options

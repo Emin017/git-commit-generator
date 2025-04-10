@@ -1,6 +1,6 @@
 [package]
-name = "git-commit-generator"
 version = "0.1.0"
+name = "git-msg"
 edition = "2021"
 authors = ["Emin <me@emin.chat>"]
 description = """
