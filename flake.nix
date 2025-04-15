@@ -25,6 +25,7 @@
       ];
       perSystem =
         {
+          inputs',
           pkgs,
           system,
           ...
@@ -40,19 +41,9 @@
           };
         in
         {
-          packages = {
-            git-msg = pkgs.callPackage ./nix/pkgs/git-msg.nix { };
-            default = self.packages.${system}.git-msg;
-          };
-          devShells.default = pkgs.mkShell {
-            inputsFrom = [ self.packages.${system}.git-msg ];
-            buildInputs = with pkgs; [
-              rust-analyzer
-              rustfmt
-            ];
-            RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
-            PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
-          };
+          imports = [
+            ./nix
+          ];
           formatter = treefmtEval.config.build.wrapper;
           checks = {
             formatting = treefmtEval.config.build.check self;

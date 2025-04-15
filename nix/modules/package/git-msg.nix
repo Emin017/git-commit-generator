@@ -13,9 +13,18 @@ pkgs.pkgsStatic.rustPlatform.buildRustPackage {
   version = "0.2.0";
 
   cargoLock = {
-    lockFile = ./../../Cargo.lock;
+    lockFile = ./../../../Cargo.lock;
   };
-  src = ./../..;
+  src =
+    with lib.fileset;
+    toSource {
+      root = ./../../..;
+      fileset = unions [
+        ./../../../src
+        ./../../../Cargo.lock
+        ./../../../Cargo.toml
+      ];
+    };
 
   PKG_CONFIG_PATH = "${pkgs.pkgsStatic.openssl.dev}/lib/pkgconfig";
 
