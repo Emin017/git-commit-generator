@@ -2,7 +2,7 @@ use crate::config::Config;
 use anyhow::{Context, Result};
 use colored::Colorize;
 use futures_util::StreamExt;
-use reqwest::{header, Response};
+use reqwest::{Response, header};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::io::{self, Write};

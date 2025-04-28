@@ -2,7 +2,7 @@ mod api;
 mod config;
 mod git;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use clap::Parser;
 use colored::Colorize;
 use config::{CommitFormat, Config};
