@@ -1,6 +1,8 @@
 use anyhow::{Context, Result};
 use std::process::Command;
 
+const MAX_DIFF_LENGTH: usize = 31000;
+
 /// Get diff of staged changes
 pub fn get_staged_diff() -> Result<String> {
     let output = Command::new("git")
@@ -13,8 +15,13 @@ pub fn get_staged_diff() -> Result<String> {
         anyhow::bail!("Failed to get staged diff: {}", error_message);
     }
 
-    let diff = String::from_utf8(output.stdout).context("Parse git diff output failed")?;
+    let mut diff = String::from_utf8(output.stdout).context("Parse git diff output failed")?;
 
+    if diff.chars().count() > MAX_DIFF_LENGTH {
+        diff = diff.chars().take(MAX_DIFF_LENGTH).collect::<String>()
+            + "\n\n[...]\n\n"
+            + "\n[... diff truncated due to length limit ...]\n";
+    }
     Ok(diff)
 }
 
