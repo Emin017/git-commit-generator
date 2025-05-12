@@ -42,6 +42,49 @@ jobs:
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
           fi
           echo "RELEASE_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          CURRENT_VERSION_TAG="${{ env.VERSION }}"
+          echo "Generating changelog for version $CURRENT_VERSION_TAG"
+
+          git fetch --tags --force
+
+          # Get the commit hash for the current version tag
+          CURRENT_TAG_COMMIT=$(git rev-parse "$CURRENT_VERSION_TAG^{commit}")
+
+          PREVIOUS_TAG_NAME=$(git describe --tags --abbrev=0 "${CURRENT_TAG_COMMIT}^" 2>/dev/null || echo "")
+
+          CHANGELOG_RANGE=""
+          if [ -n "$PREVIOUS_TAG_NAME" ] && [ "$PREVIOUS_TAG_NAME" != "$CURRENT_VERSION_TAG" ]; then
+            echo "Previous tag found: $PREVIOUS_TAG_NAME. Current tag: $CURRENT_VERSION_TAG"
+            CHANGELOG_RANGE="${PREVIOUS_TAG_NAME}..${CURRENT_VERSION_TAG}"
+          else
+            if [ "$PREVIOUS_TAG_NAME" == "$CURRENT_VERSION_TAG" ]; then
+              echo "Warning: Previous tag detection resolved to the current tag ('$CURRENT_VERSION_TAG'). This can happen in specific tagging scenarios."
+            fi
+            echo "No distinct previous tag found, or it's the first release. Generating changelog for all commits leading to $CURRENT_VERSION_TAG."
+            # This will list all commits that are ancestors of CURRENT_VERSION_TAG.
+            # For the first tag, it lists all commits from the beginning.
+            CHANGELOG_RANGE="$CURRENT_VERSION_TAG"
+          fi
+
+          echo "Using commit range for git log: $CHANGELOG_RANGE"
+          # Format: - Commit subject (short_hash)
+          GENERATED_CHANGELOG=$(git log --pretty="format:- %s (%h)" $CHANGELOG_RANGE)
+
+          if [ -z "$GENERATED_CHANGELOG" ]; then
+            echo "Changelog is empty. Setting a default message."
+            GENERATED_CHANGELOG="- Initial release or no new commits identified for this version."
+          fi
+
+          echo "--- Generated Changelog ---"
+          echo "$GENERATED_CHANGELOG"
+          echo "--------------------------"
+
+          echo "CHANGELOG_CONTENT<<__EOF__" >> $GITHUB_ENV
+          echo "$GENERATED_CHANGELOG" >> $GITHUB_ENV
+          echo "__EOF__" >> $GITHUB_ENV
       - name: Setup Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -67,6 +110,9 @@ jobs:
             # Git Commit Generator (git-msg) ${{ env.VERSION }}
 
             Release date: ${{ env.RELEASE_DATE }}
+
+            ## Changelog
+            ${{env.CHANGELOG_CONTENT}}
 
             ## 📦 Support Platforms
             - Linux (x86_64)
